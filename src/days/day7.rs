@@ -53,9 +53,10 @@ async fn bake(headers: HeaderMap) -> Result<Json<RecipeOutput>, (StatusCode, Str
     let pantry = if cookies == 0 {
         decoded_input.pantry.clone()
     } else {
-        decoded_input.recipe.iter()
+        decoded_input.pantry.iter()
             .map(|(ingredient, &count)|(ingredient.to_owned(),
-                *decoded_input.pantry.get(ingredient).unwrap() - count * cookies))
+                count - decoded_input.recipe.get(ingredient).map(|&count| count * cookies)
+                    .unwrap_or(0)))
             .collect()
     };
     Ok(Json(RecipeOutput { cookies, pantry }))
