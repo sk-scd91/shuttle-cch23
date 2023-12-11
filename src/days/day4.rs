@@ -60,8 +60,8 @@ async fn contest(Json(reindeer): Json<Vec<ReindeerStrength>>)
     }
 
     Ok(Json(ContestResults {
-        fastest: format!("Speeding past the finish line with a strength of {} is {}", fastest.speed, &fastest.name),
-        tallest: format!("{} is standing tall with his {} cm wide antlers", &tallest.name, tallest.height),
+        fastest: format!("Speeding past the finish line with a strength of {} is {}", fastest.strength, &fastest.name),
+        tallest: format!("{} is standing tall with his {} cm wide antlers", &tallest.name, tallest.antler_width),
         magician: format!("{} could blast you away with a snow magic power of {}", &magician.name, magician.snow_magic_power),
         consumer: format!("{} ate lots of candies, but also some {}", &most_candies.name, &most_candies.favorite_food)
     }))
