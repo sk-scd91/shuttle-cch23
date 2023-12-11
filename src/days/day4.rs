@@ -48,8 +48,7 @@ async fn contest(Json(reindeer): Json<Vec<ReindeerStrength>>)
     }
 
     let fastest = reindeer.iter()
-        .max_by(|a, b| a.speed.partial_cmp(&b.speed)
-            .unwrap_or_else(|| b.speed.is_nan().cmp(&a.speed.is_nan()))) // Propagate numeric values.
+        .max_by(|a, b| a.speed.total_cmp(&b.speed))
         .unwrap();
     let tallest = reindeer.iter().max_by_key(|r| r.height).unwrap();
     let magician = reindeer.iter().max_by_key(|r| r.snow_magic_power).unwrap();
