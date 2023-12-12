@@ -23,7 +23,8 @@ async fn main() -> shuttle_axum::ShuttleAxum {
         .nest("/6", day6::elf_router())
         .nest("/7", day7::cookie_router())
         .nest("/8", day8::pokemon_router())
-        .nest("/11", day11::ornament_router());
+        .nest("/11", day11::ornament_router())
+        .nest("/12", day12::timekeeper_router());
 
     Ok(router.into())
 }
