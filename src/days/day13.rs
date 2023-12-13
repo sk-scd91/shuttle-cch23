@@ -20,6 +20,16 @@ struct Order {
     quantity: i32,
 }
 
+#[derive(Serialize)]
+struct Total {
+    total: i64,
+}
+
+#[derive(Serialize)]
+struct Popular {
+    popular: Option<String>,
+}
+
 const RESET_QUERY: &'static str = r"
     DROP TABLE IF EXISTS orders;
     CREATE TABLE orders (
@@ -28,6 +38,15 @@ const RESET_QUERY: &'static str = r"
         gift_name VARCHAR(50),
         quantity INT
     );
+";
+
+const MOST_POPULAR_QUERY: &'static str = r"
+    SELECT gift_name
+    FROM (SELECT gift_name, SUM(quantity) AS total
+        FROM orders
+        GROUP BY gift_name)
+    ORDER BY total DESC
+    LIMIT 1;
 ";
 
 async fn test_sql(State(order_db): State<OrderDb>) -> Result<String, (StatusCode, String)> {
@@ -70,14 +89,26 @@ async fn insert_order(
 
 async fn get_total_orders(
     State(order_db): State<OrderDb>,
-) -> Result<String, (StatusCode, String)> {
-    let result: i64 = sqlx::query_scalar("SELECT SUM(quantity) FROM orders;")
+) -> Result<Json<Total>, (StatusCode, String)> {
+    let result: i64 = sqlx::query_scalar("SELECT COALESCE(SUM(quantity), 0) FROM orders;")
         .fetch_one(&order_db.pool)
         .await
         .map_err(
             |e| (StatusCode::INTERNAL_SERVER_ERROR, format!("DB Error: {}", e))
         )?;
-    Ok(result.to_string())
+    Ok(Json(Total { total: result }))
+}
+
+async fn get_popular_gift(
+    State(order_db): State<OrderDb>,
+) -> Result<Json<Popular>, (StatusCode, String)> {
+    let result: Option<String> = sqlx::query_scalar(MOST_POPULAR_QUERY)
+        .fetch_optional(&order_db.pool)
+        .await
+        .map_err(
+            |e| (StatusCode::INTERNAL_SERVER_ERROR, format!("DB Error: {}", e))
+        )?;
+    Ok(Json(Popular { popular: result }))
 }
 
 pub fn gift_order_router(pg_pool: PgPool) -> Router {
@@ -87,5 +118,6 @@ pub fn gift_order_router(pg_pool: PgPool) -> Router {
         .route("/reset", post(reset_order_table))
         .route("/orders", post(insert_order))
         .route("/orders/total", get(get_total_orders))
+        .route("/orders/popular", get(get_popular_gift))
         .with_state(order_db)
 }
