@@ -30,7 +30,8 @@ async fn main(
         .nest("/8", day8::pokemon_router())
         .nest("/11", day11::ornament_router())
         .nest("/12", day12::timekeeper_router())
-        .nest("/13", day13::gift_order_router(pool.clone()));
+        .nest("/13", day13::gift_order_router(pool.clone()))
+        .nest("/14", day14::html_reindeer_route());
 
     Ok(router.into())
 }
