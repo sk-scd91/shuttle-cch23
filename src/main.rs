@@ -31,7 +31,8 @@ async fn main(
         .nest("/11", day11::ornament_router())
         .nest("/12", day12::timekeeper_router())
         .nest("/13", day13::gift_order_router(pool.clone()))
-        .nest("/14", day14::html_reindeer_route());
+        .nest("/14", day14::html_reindeer_route())
+        .nest("/15", day15::nice_password_router());
 
     Ok(router.into())
 }

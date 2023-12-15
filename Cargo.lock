@@ -362,6 +362,7 @@ dependencies = [
  "base64",
  "chrono",
  "image",
+ "regex",
  "reqwest",
  "serde",
  "serde_json",
