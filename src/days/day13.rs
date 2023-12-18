@@ -8,16 +8,16 @@ use serde::{Deserialize, Serialize};
 use sqlx::{Executor, FromRow, PgPool, QueryBuilder};
 
 #[derive(Clone)]
-struct OrderDb {
-    pool: PgPool,
+pub(super) struct OrderDb {
+    pub(super) pool: PgPool,
 }
 
 #[derive(FromRow, Serialize, Deserialize)]
-struct Order {
-    id: i32,
-    region_id: i32,
-    gift_name: String,
-    quantity: i32,
+pub(super) struct Order {
+    pub(super) id: i32,
+    pub(super) region_id: i32,
+    pub(super) gift_name: String,
+    pub(super) quantity: i32,
 }
 
 #[derive(Serialize)]
@@ -67,7 +67,7 @@ async fn reset_order_table(State(order_db): State<OrderDb>) -> StatusCode {
         .unwrap_or(StatusCode::INTERNAL_SERVER_ERROR)
 }
 
-async fn insert_order(
+pub(super) async fn insert_order(
     State(order_db): State<OrderDb>,
     Json(orders): Json<Vec<Order>>,
  ) -> StatusCode {
