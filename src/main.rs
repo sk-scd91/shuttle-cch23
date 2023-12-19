@@ -33,7 +33,8 @@ async fn main(
         .nest("/13", day13::gift_order_router(pool.clone()))
         .nest("/14", day14::html_reindeer_route())
         .nest("/15", day15::nice_password_router())
-        .nest("/18", day18::gift_order_router2(pool.clone()));
+        .nest("/18", day18::gift_order_router2(pool.clone()))
+        .nest("/19", day19::ws_games_router());
 
     Ok(router.into())
 }
