@@ -71,6 +71,12 @@ pub(super) async fn insert_order(
     State(order_db): State<OrderDb>,
     Json(orders): Json<Vec<Order>>,
  ) -> StatusCode {
+
+    // Skip if orders is empty.
+    if orders.is_empty() {
+        return StatusCode::OK;
+    }
+
     // Use a QueryBuilder to add multiple tuple values.
     let mut builder: QueryBuilder<sqlx::Postgres> =
         QueryBuilder::new("INSERT INTO orders (id, region_id, gift_name, quantity) ");
