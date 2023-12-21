@@ -364,6 +364,7 @@ dependencies = [
  "axum-extra",
  "base64",
  "chrono",
+ "flate2",
  "futures",
  "futures-util",
  "image",
