@@ -35,7 +35,8 @@ async fn main(
         .nest("/15", day15::nice_password_router())
         .nest("/18", day18::gift_order_router2(pool.clone()))
         .nest("/19", day19::ws_games_router())
-        .nest("/20", day20::archive_router());
+        .nest("/20", day20::archive_router())
+        .nest("/21", day21::world_coord_router());
 
     Ok(router.into())
 }
